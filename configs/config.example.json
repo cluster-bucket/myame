@@ -1,0 +1,9 @@
+{
+	"db": "mongodb://localhost/myame_example",
+	"session": {
+	    "secret": "",
+	    "resave": false,
+	    "saveUninitialized": false
+	}
+
+}
