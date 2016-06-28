@@ -1,5 +1,8 @@
 extends layout
 
+block styles
+  link(rel='stylesheet', href='//cdn.jsdelivr.net/simplemde/latest/simplemde.min.css')
+
 block content
   form(role='form', action="/files", method="post")
     textarea#editor(name="content")= content
@@ -9,5 +12,5 @@ block content
       button.btn.btn-primary(type="button") Cancel
 
 block scripts
-    script(src='//cdn.jsdelivr.net/ace/1.2.3/min/ace.js')
-    script(src='/scripts/ace.js')
+    script(src='//cdn.jsdelivr.net/simplemde/latest/simplemde.min.js')
+    script(src='/scripts/editor.js')
