@@ -1,9 +1,9 @@
 {
-	"db": "mongodb://localhost/myame_example",
-	"session": {
-	    "secret": "",
+	"connectionString": "mongodb://localhost/myame_example",
+	"sessionOptions": {
+	    "secret": "super sekrit secrit",
 	    "resave": false,
 	    "saveUninitialized": false
-	}
-
+	},
+  "contentPath": "/path/to/markdown/dir"
 }
