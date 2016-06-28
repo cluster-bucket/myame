@@ -3,6 +3,7 @@ var router = express.Router();
 var serveIndex = require('serve-index');
 var fs = require('fs')
 var path = require('path');
+var yaml = require('js-yaml');
 
 var config = require('../configs');
 
@@ -17,14 +18,35 @@ router.get('/*', serveIndex(config.contentPath, {
 router.get('/:file(*)', function (req, res, next) {
   var filepath = path.join(config.contentPath, req.params.file);
   fs.readFile(filepath, 'utf8', function (err,data) {
-    if (err) { return console.log(err); }
-    res.render('file', {
-      title: req.params.file,
-      path: req.params.file,
-      content: data
-    });
+	if (err) { return console.log(err); }
+	var parsed = parseContent(data);
+	parsed.path = req.params.file;
+	res.render('file', { data: parsed });
   });
 });
+
+function parseContent (content) {
+  var chunks = content.split('---');
+  var yamlStr = chunks[1];
+  var markdown = chunks[2];
+  var parsed = {
+	  error: null,
+	  content: null,
+	  headers: null,
+	  title: null,
+	  date: null
+  };
+
+  try {
+	parsed.headers = yaml.safeLoad(yamlStr);
+  } catch (e) {
+	parsed.error = e;
+	return parsed;
+  }
+
+  parsed.content = markdown;
+  return parsed;
+}
 
 // GET /files/:id/edit
 // router.get('/:id/edit', function (req, res, next) {

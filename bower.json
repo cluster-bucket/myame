@@ -1,0 +1,22 @@
+{
+  "name": "myame",
+  "description": "",
+  "main": "",
+  "authors": [
+    "Dustin Boston <dustin@dblogit.com.com>"
+  ],
+  "license": "GPL",
+  "homepage": "https://github.com/dustinboston/myame",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "air-datepicker": "^2.0.2"
+  }
+}

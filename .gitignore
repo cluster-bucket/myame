@@ -40,3 +40,6 @@ jspm_packages
 configs/config.development.json
 configs/config.production.json
 configs/config.test.json
+
+# libs
+public/bower_components

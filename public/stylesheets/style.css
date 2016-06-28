@@ -9,6 +9,10 @@ body {
   padding: 1rem;
 }
 
+#editor-container {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
 .CodeMirror {
   height: 400px;
 }
