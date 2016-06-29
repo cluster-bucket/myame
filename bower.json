@@ -17,6 +17,9 @@
     "tests"
   ],
   "dependencies": {
-    "air-datepicker": "^2.0.2"
+    "air-datepicker": "~2.0.2",
+    "bootstrap": "~3.3.6",
+    "simplemde": "~1.11.2",
+    "font-awesome": "fontawesome#~4.6.3"
   }
 }

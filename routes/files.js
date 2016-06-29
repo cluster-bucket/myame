@@ -18,10 +18,10 @@ router.get('/*', serveIndex(config.contentPath, {
 router.get('/:file(*)', function (req, res, next) {
   var filepath = path.join(config.contentPath, req.params.file);
   fs.readFile(filepath, 'utf8', function (err,data) {
-  if (err) { return console.log(err); }
-  var parsed = parseContent(data);
-  parsed.path = req.params.file;
-  res.render('file', { data: parsed });
+    if (err) { return console.log(err); }
+    var parsed = parseContent(data);
+    parsed.path = req.params.file;
+    res.render('file', { data: parsed });
   });
 });
 
@@ -39,20 +39,37 @@ function parseContent (content) {
 
   var parsed = {
     error: null,
-    content: null,
-    headers: null,
-    title: null,
-    date: null
+    content: '',
+    meta: {},
+    title: '',
+    date: '1/1/1970',
+    url: '',
+    excerpt: false,
+    tags: '',
+    categories: ''
   };
 
+  parsed.content = markdown;
+
+  var meta = {};
   try {
-    parsed.headers = yaml.safeLoad(yamlStr);
+    meta = yaml.safeLoad(yamlStr);
   } catch (e) {
     parsed.error = e;
     return parsed;
   }
 
-  parsed.content = markdown;
+  if (meta) {
+    var mainItems = Object.keys(parsed);
+    Object.keys(meta).forEach(function (element) {
+      if (mainItems.indexOf(element) > -1) {
+        parsed[element] = meta[element];
+      } else {
+        parsed.meta[element] = meta[element];
+      }
+    });
+  }
+
   return parsed;
 }
 
