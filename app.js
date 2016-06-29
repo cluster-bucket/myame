@@ -1,4 +1,5 @@
 var express = require('express');
+var methodOverride = require('method-override')
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -7,6 +8,8 @@ var bodyParser = require('body-parser');
 var serveIndex = require('serve-index');
 var mongoose = require('mongoose');
 var passport = require('passport');
+var connectFlash = require('connect-flash');
+var expressMessages = require('express-messages');
 var LocalStrategy = require('passport-local').Strategy;
 
 var config = require('./configs');
@@ -24,8 +27,29 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
+
+app.use(connectFlash());
+app.use(function (req, res, next) {
+  res.locals.messages = expressMessages(req, res);
+  next();
+});
+
+// NOTE: when using req.body, you must fully parse the request body
+//       before you call methodOverride() in your middleware stack,
+//       otherwise req.body will not be populated.
+// This means you must set enctype="application/x-www-form-urlencoded"
+// on the forms which will be calling PUT
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(methodOverride(function(req, res){
+  if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+    // look in urlencoded POST bodies and delete it
+    var method = req.body._method
+    delete req.body._method
+    return method
+  }
+}));
+
 app.use(cookieParser());
 app.use(require('express-session')(config.sessionOptions));
 app.use(passport.initialize());

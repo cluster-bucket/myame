@@ -20,12 +20,8 @@ html
           li
             a(href="/admin/logout") Logout
 
-    if (error && error.length > 0)
-      br
-      h4.error-msg= error
-      br
-
     div.container-fluid
+      != messages('messages', locals)
       block content
 
     script(src='/bower_components/jquery/dist/jquery.min.js')

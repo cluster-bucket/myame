@@ -5,18 +5,19 @@ block styles
   link(rel='stylesheet', href='/bower_components/air-datepicker/dist/css/datepicker.min.css')
 
 block content
-  form(role='form', action="/files", method="post")
+  form(role='form', action="/admin/files/#{data.path}", method="post", enctype="application/x-www-form-urlencoded")
+    input(type="hidden", name="_method", value="PUT")
     div.row
       div.col-md-9.col-sm-12
-        input.form-control.input-lg(type="text", value="#{data.title}", placeholder="Post title")
+        input.form-control.input-lg(type="text", name="title", value="#{data.title}", placeholder="Post title")
         div#editor-container
           textarea#editor.form-control(name="content")= data.content
         fieldset
           legend Meta
-          each val, index in data.meta
+          each val in data.meta
             div.form-group
-              label(for="meta[#{index}]")= index
-              input.form-control(type="text", name="meta[#{index}]", value="#{val}")
+              label(for="#{index}")= index
+              input.form-control(type="text", name="#{val}", value="#{data[val]}")
 
       div.col-md-3.col-sm-12
         div.form-group
