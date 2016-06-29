@@ -18,30 +18,38 @@ router.get('/*', serveIndex(config.contentPath, {
 router.get('/:file(*)', function (req, res, next) {
   var filepath = path.join(config.contentPath, req.params.file);
   fs.readFile(filepath, 'utf8', function (err,data) {
-	if (err) { return console.log(err); }
-	var parsed = parseContent(data);
-	parsed.path = req.params.file;
-	res.render('file', { data: parsed });
+  if (err) { return console.log(err); }
+  var parsed = parseContent(data);
+  parsed.path = req.params.file;
+  res.render('file', { data: parsed });
   });
 });
 
 function parseContent (content) {
   var chunks = content.split('---');
-  var yamlStr = chunks[1];
-  var markdown = chunks[2];
+
+  // First line will always be a delimter, so just throw it away
+  chunks.shift();
+
+  // Second chunk is the YAML
+  var yamlStr = chunks.shift();
+
+  // The rest is Markdown, maybe there's a better way than this.
+  var markdown = chunks.join('---');
+
   var parsed = {
-	  error: null,
-	  content: null,
-	  headers: null,
-	  title: null,
-	  date: null
+    error: null,
+    content: null,
+    headers: null,
+    title: null,
+    date: null
   };
 
   try {
-	parsed.headers = yaml.safeLoad(yamlStr);
+    parsed.headers = yaml.safeLoad(yamlStr);
   } catch (e) {
-	parsed.error = e;
-	return parsed;
+    parsed.error = e;
+    return parsed;
   }
 
   parsed.content = markdown;

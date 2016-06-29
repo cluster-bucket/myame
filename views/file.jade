@@ -1,25 +1,31 @@
 extends layout
 
 block styles
-	link(rel='stylesheet', href='//cdn.jsdelivr.net/simplemde/latest/simplemde.min.css')
-	link(rel='stylesheet', href='/bower_components/air-datepicker/dist/css/datepicker.min.css')
+  link(rel='stylesheet', href='//cdn.jsdelivr.net/simplemde/latest/simplemde.min.css')
+  link(rel='stylesheet', href='/bower_components/air-datepicker/dist/css/datepicker.min.css')
 
 block content
-	form.form-horizontal(role='form', action="/files", method="post")
-		input.form-control.input-lg(type="text", value="#{data.headers.title}", placeholder="Post title")
-		div#editor-container
-			textarea#editor.form-control(name="content")= data.content
-		div.row
-			div.col-xs-3
-				div.form-group
-					input.form-control.datepicker-here(type="text", data-timepicker="true", data-language="en", data-position="top left", value="#{data.headers.date}")
-			div.col-xs-9
-				div.pull-right
-					button.btn.btn-primary(type='submit') Submit
-					button.btn.btn-default(type="button") Cancel
+  form.form-horizontal(role='form', action="/files", method="post")
+    div.row
+      div.col-md-9.col-sm-12
+        input.form-control.input-lg(type="text", value="#{data.headers.title}", placeholder="Post title")
+        div#editor-container
+          textarea#editor.form-control(name="content")= data.content
+        fieldset
+          legend Extra Options
+          each val, index in data.headers
+            div.form-group
+              label= index
+                input.form-control(type="text", value="#{val}")
+
+      div.col-md-3.col-sm-12
+        div.form-group
+          label Publish Date
+          input.form-control.datepicker-here(type="text", data-timepicker="true", data-language="en", value="#{data.headers.date}")
+        button.btn.btn-primary.pull-right(type='submit') Save Post
 
 block scripts
-	script(src='//cdn.jsdelivr.net/simplemde/latest/simplemde.min.js')
-	script(src='/bower_components/air-datepicker/dist/js/datepicker.min.js')
-	script(src='/bower_components/air-datepicker/dist/js/i18n/datepicker.en.js')
-	script(src='/scripts/editor.js')
+  script(src='//cdn.jsdelivr.net/simplemde/latest/simplemde.min.js')
+  script(src='/bower_components/air-datepicker/dist/js/datepicker.min.js')
+  script(src='/bower_components/air-datepicker/dist/js/i18n/datepicker.en.js')
+  script(src='/scripts/editor.js')
