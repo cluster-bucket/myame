@@ -31,13 +31,14 @@ router.put('/:file(*)', function (req, res, next) {
   Object.keys(req.body).forEach(function (element) {
       yamlObj[element] = req.body[element];
   });
-  var yamlStr = yaml.safeDump(yamlObj);
+  yamlObj.tzoffset = yamlObj.hasOwnProperty('tzoffset') ? yamlObj.tzoffset : (-1 * (new Date()).getTimezoneOffset());
+  var parsed = parseMeta(yamlObj);
+  var yamlStr = yaml.safeDump(parsed);
   var merged = '---\r\n' + yamlStr + '\r\n---\r\n' + req.body.content;
   var filepath = path.join(config.contentPath, req.params.file);
   fs.writeFile(filepath, merged, function (err) {
     if (err) { return console.log(err); }
     req.flash('success', 'File saved!');
-    var parsed = parseMeta(req.body);
     parsed.path = req.params.file;
     res.render('file', { data: parsed });
   });
@@ -76,22 +77,29 @@ function parseContent (content) {
 function parseMeta(meta) {
     // These are used in the template specifically, so define them here
     // Any additional properties will just get tacked on to the end.
+    var rawdate = new Date(meta.date);
+    var tzoffset = meta.hasOwnProperty('tzoffset') ? meta.tzoffset : rawdate.getTimezoneOffset();
+    var date = new Date(rawdate.getTime() + tzoffset * 60 * 1000);
+    console.log(meta.date, tzoffset, date);
+
     var parsed = {
       error: null,
-      content: '',
-      title: '',
-      date: '1/1/1970',
-      url: '',
-      excerpt: false,
-      tags: '',
-      categories: '',
+      content: meta.content,
+      title: meta.title,
+      // The implict toString here would cause a timezone to be set. To prevent
+      // that, toUTCString() is called, which will not set the timezone.
+      date: date.toUTCString(),
+      url: meta.url,
+      excerpt: meta.excerpt,
+      tags: meta.tags,
+      categories: meta.categories,
       meta: []
     };
 
     var mainItems = Object.keys(parsed);
     Object.keys(meta).forEach(function (element) {
-      parsed[element] = meta[element];
       if (mainItems.indexOf(element) < 0) {
+        parsed[element] = meta[element];
         parsed.meta.push(element);
       }
     });

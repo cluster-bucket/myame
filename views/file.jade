@@ -16,13 +16,13 @@ block content
           legend Meta
           each val in data.meta
             div.form-group
-              label(for="#{index}")= index
+              label(for="#{val}")= val
               input.form-control(type="text", name="#{val}", value="#{data[val]}")
 
       div.col-md-3.col-sm-12
         div.form-group
           label(for="date") Date
-          input.form-control.datepicker-here(type="text", name="date", data-timepicker="true", data-language="en", value="#{data.date}")
+          input.form-control(type="text", name="date", value="#{data.date}")
         div.form-group
           label(for="url") Slug
           input.form-control(type="text", name="url", value="#{data.url}")
@@ -40,6 +40,6 @@ block content
 
 block scripts
   script(src='/bower_components/simplemde/dist/simplemde.min.js')
-  script(src='/bower_components/air-datepicker/dist/js/datepicker.min.js')
+  script(src='/bower_components/air-datepicker/dist/js/datepicker.js')
   script(src='/bower_components/air-datepicker/dist/js/i18n/datepicker.en.js')
   script(src='/scripts/editor.js')
